@@ -1,0 +1,120 @@
+cat /etc/os-release
+
+download Docker:
+Install Docker on Ubuntu 18.04
+sudo apt update
+sudo apt install apt-transport-https : install crypto-shifr packages
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add - : download key and put them to repo
+sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" :download only stable version
+sudo apt update : after plus one repository , be seen in linux system
+sudo apt install docker-ce :install docker com.edition
+sudo systemctl status docker :check docker process
+docker -v
+sudo usermod -aG docker $USER :without use use in start docker-commands
+>>>logout/login<<< :active 
+
+
+docker run hello-world :test docker-engine (search hello-world.image in this compute if not empty , go to internet and download)
+
+
+docker ps -a(history runn's containers); show containers how runn's
+
+docker images : list your images
+*repository - name images
+*TAG - (edit if you need Example: v1,v2...
+*ImageID - (use docker image in imageid or repository)
+*Created - when it was born 
+size - you know
+
+*dockerhub - download done images
+
+
+docker search tomcat : search images in dockerhub
+
+docker pull name.images : just download images from dockerhub
+
+RUN IMAGES => CONTAINER (RUN CONTAINER FROM IMAGES)
+
+How running container ?
+docker run -it(interactive-i show process) -p (redirects ports, choise you local port : mini virtual port open or container) name.image
+docker run -it -p 1234:8080 tomcat
+
+docker run -d(demon) -p 1234:8080 tomcat
+input id docker container Example : c8d8f147fda8dda823a1e960f8e87719f461da761f37d29a60eb2af2523f3df2
+
+*redirects - benefite - 2 container running on two different ports
+
+
+docker run -d -p 1234:80 nginx : search on local pc image(nginx) , if not , download on dockerhub and up container
+
+
+How delete images ?
+before you need delete container (however if this container not runnung)
+docker rm Container ID (check docker ps -a)
+and now you succes will delete image
+docker rmi name.images or image id(chek docker images)
+check force command !
+
+
+Create your images - Dockerfile (use docker syntax)
+
+FROM ubuntu:16.04 : what image you use 
+
+RUN apt-get -y update : commands on this image
+RUN apt-get -y install apache2 : commands on this image
+
+RUN echo 'Hello World from Docker!' > /var/www/html/index.html : command transfer string in directory in file
+
+
+CMD ["/usr/sbin/apache2ctl", "-D","FOREGROUND"] : run apache serv on background (-D)
+EXPOSE 80 :Open port 80 
+
+Summary - it's install our apache app-server
+
+
+Sooo How create from Dockerfile , our image ???
+docker build -t name:img(your choise) .(where is ? - local)
+docker build -t iapache:v2 . 
+
+what's happen ?
+1. Download image Ubuntu from dockerhub
+2. Start commands (run -apt-get update && upgrade)
+3. Install apache and run apache
+
+right now i'm create my image , my local image (don't have in dockerhub) i'm create my program , how's running in this container 
+
+so , if you press - docker image , you see new docker image - Ubuntu - you know why ) 
+
+*run you image with tage (because if you don't do this , your docker run is in latest version , if it was)
+
+Image create , and now i'm run my container (inside have my web-site)
+docker run -d -p 1234:80 iapache:v2
+
+
+
+What is docker TAG ??? 
+*if you need , this docker tag may change 
+docker tag iapache:v1 iapache:copy - dublicat with another tag
+
+*Dangerous command , because use more your memory 
+
+
+Login to my container 
+How change inforamtion inside container ? 
+docker exec -it containerID /bin/bash
+
+
+So , after change , how create NEW IMAGE from DOCKER CONTAINER ?? 
+docker commit containerID newnametothis:image     : create new img with new image ID 
+
+
+*docker containers always has another ID , but docker images if you set dublicat hav one ID 
+*docker containers use memory , my physical pc !!!
+
+
+
+How to save docker my docker-image (backup) - Dockerhub (log in , push) or amazon or - >
+Export/Import Docker Image to file
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+docker save image:tag > arch_name.tar
+docker load -i arch_name.tar
